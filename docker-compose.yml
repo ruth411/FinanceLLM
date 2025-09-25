@@ -1,0 +1,42 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: fin-llm-api
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - DB_PATH=/data/finance.db
+      - DEFAULT_MODEL=phi3:mini
+    volumes:
+      - db:/data
+      - ./data:/workspace/data
+    ports:
+      - "8000:8000"
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: fin-llm-app
+    depends_on:
+      - api
+    environment:
+      - API_BASE=http://api:8000
+    ports:
+      - "8501:8501"
+
+volumes:
+  ollama:
+  db:
