@@ -18,7 +18,7 @@ services:
     environment:
       - OLLAMA_HOST=http://ollama:11434
       - DB_PATH=/data/finance.db
-      - DEFAULT_MODEL=phi3:mini
+      - DEFAULT_MODEL=llama3.2:1b
     volumes:
       - db:/data
       - ./data:/workspace/data

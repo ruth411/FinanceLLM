@@ -13,7 +13,7 @@ def chat(prompt: str, system: str = "You are a helpful finance analyst.") -> str
         ],
         "stream": False,
     }
-    r = requests.post(url, json=payload, timeout=120)
+    r = requests.post(url, json=payload, timeout=(10,300))
     r.raise_for_status()
     data = r.json()
     return data.get("message", {}).get("content", "")
